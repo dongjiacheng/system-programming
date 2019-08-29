@@ -1,0 +1,49 @@
+1) What is a socket?
+communicate with other host
+
+2) What is the difference between the domains AF_INET and AF_UNIX?
+former is with remote host,latter is local
+
+3) What is the difference between SOCK_STREAM and SOCK_DGRAM?
+STREAM is in TCP and DGDRAM is in UDP
+
+4) Why is it important to clear all the values the addrinfo struct before using it in getaddrinfo?
+	because none null value have specific meaning
+
+5) What are ai_family and ai_socktype?
+specify the socket type and IP type(desired address family)
+
+6) What does getaddrinfo do?
+getaddrinfo() returns one or more addrinfo structures, each
+       of which contains an Internet address that can be specified in a call
+       to bind(2) or connect(2)
+
+7) What does connect do?
+	       The connect() system call connects the socket referred to by the file
+       descriptor sockfd to the address specified by addr.  The addrlen
+       argument specifies the size of addr.
+
+8) What is setsockopt?
+The setsockopt() function shall set the option specified by the option_name argument, at the protocol level specified by the level argument, to the value pointed to by the option_value argument for the socket associated with the file descriptor specified by the socket argument.
+
+9) What does bind do?
+ When a socket is created with socket(2), it exists in a name space
+       (address family) but has no address assigned to it.  bind() assigns
+       the address specified by addr to the socket referred to by the file
+       descriptor sockfd.  addrlen specifies the size, in bytes, of the
+       address structure pointed to by addr.  Traditionally, this operation
+       is called “assigning a name to a socket”.
+
+10) What does listen do?
+  listen() marks the socket referred to by sockfd as a passive socket,
+       that is, as a socket that will be used to accept incoming connection
+       requests using accept(2).
+
+11) What does accept do?
+ The accept() system call is used with connection-based socket types
+       (SOCK_STREAM, SOCK_SEQPACKET).  It extracts the first connection
+       request on the queue of pending connections for the listening socket,
+       sockfd, creates a new connected socket, and returns a new file
+       descriptor referring to that socket.  The newly created socket is not
+       in the listening state.  The original socket sockfd is unaffected by
+       this call.

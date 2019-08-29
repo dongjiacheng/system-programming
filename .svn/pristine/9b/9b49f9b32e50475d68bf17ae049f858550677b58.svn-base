@@ -1,0 +1,146 @@
+/**
+ * Machine Problem: Password Cracker
+ * CS 241 - Spring 2017
+ */
+
+#include "cracker1.h"
+#include "format.h"
+#include "utils.h"
+#include "string.h"
+#include "stdlib.h"
+#include <stdio.h>
+#include <unistd.h>
+#include <crypt.h>
+#include <math.h>
+/**
+ * Splits a copy of 'str' by a 'delim'.
+ * Then writes the number of tokens into 'numtokens'.
+ * These strings are allocated on the heap, so call free_args(char **args) when
+ * you are done with them.
+ * Learn more at:
+ * https://www.quora.com/How-do-you-write-a-C-program-to-split-a-string-by-a-delimiter
+ */
+char **strsplit(const char *str, const char *delim, size_t *numtokens) {
+  // copy the original string so that we don't overwrite parts of it
+  // (don't do this if you don't need to keep the old line,
+  // as this is less efficient)
+  char *s = strdup(str);
+  // these three variables are part of a very common idiom to
+  // implement a dynamically-growing array
+  size_t tokens_alloc = 1;
+  size_t tokens_used = 0;
+  char **tokens = calloc(tokens_alloc, sizeof(char *));
+  char *token, *strtok_ctx;
+  for (token = strtok_r(s, delim, &strtok_ctx); token != NULL;
+       token = strtok_r(NULL, delim, &strtok_ctx)) {
+    // check if we need to allocate more space for tokens
+    if (tokens_used == tokens_alloc) {
+      tokens_alloc *= 2;
+      tokens = realloc(tokens, tokens_alloc * sizeof(char *));
+    }
+    tokens[tokens_used++] = strdup(token);
+  }
+  // cleanup
+  if (tokens_used == 0) {
+    free(tokens);
+    tokens = NULL;
+  } else {
+    tokens = realloc(tokens, tokens_used * sizeof(char *));
+  }
+  *numtokens = tokens_used;
+  free(s);
+  // Adding a null terminator
+  tokens = realloc(tokens, sizeof(char *) * (tokens_used + 1));
+  tokens[tokens_used] = NULL;
+  return tokens;
+}
+//free return value of args
+void free_args(char **args) {
+  char **ptr = args;
+  while (*ptr) {
+    free(*ptr);
+    ptr++;
+  }
+  free(args);
+}
+
+int start(size_t thread_count) {
+  // TODO your code here, make sure to use thread_count!
+  // Remember to ONLY crack passwords in other threads
+  FILE* Inputs = fopen("./inputs/cracker1.in","r");//need close
+  if(Inputs == NULL)
+  {
+  	puts("error");
+  	return 0;
+  	}
+  size_t sizze;
+  char* buf = NULL;
+  while(getline(&buf,&sizze,Inputs) != -1)//need free
+  {
+
+  	size_t number;
+  	char* temp = strdup(buf);//need free
+  	free(buf);
+  	buf = NULL;
+  	if(temp[strlen(temp) - 1] == '\n')
+  		temp[strlen(temp) - 1] = '\0';
+  	char** NewData = strsplit(temp, " ", &number);//need free
+  	free(temp);//freed
+  	temp = NULL;
+  	if(number != 3)
+  	{
+  		perror("not gonna happened, input not enough");
+  		exit(1);
+  	}
+  	int knowNumber = getPrefixLength(NewData[2]);
+  	int PWlength = strlen(NewData[2]);
+  	char* try = strdup(NewData[2]);//need free
+ 	for(int i = knowNumber; i < PWlength; i++)
+ 		try[i] = 'a';
+
+ 	int hashCount = 0;
+ 	int running = 1;
+ 	double time1 = getThreadCPUTime();
+
+ 	while(running)
+ 	{
+ 	char* hashed;
+ 	char* hashresult = NULL;
+ 	struct crypt_data cdata;
+	cdata.initialized = 0;
+	//need mutex
+ 	hashed = crypt_r(try, "xx", &cdata);
+ 	hashCount++;
+ 	hashresult = strdup(hashed);//need free
+ 	if(strcmp(hashresult,NewData[1]) == 0)
+ 	{
+ 		free(hashresult);
+ 		hashresult = NULL;		
+ 		break;
+ 	}
+ 	else
+ 		 {
+ 		 running = incrementString(try);
+ 		 free(hashresult);
+ 		 if(running == 0)
+ 		 	break;
+ 		 hashresult = NULL;	
+ 		 }
+ 		// printf("%s",try);
+ 	}
+ 	int rt;
+ 	if(running == 1)
+ 		rt = 0;
+ 	else
+ 		rt = 1;
+ 	double time2 = getThreadCPUTime();
+ 	v1_print_thread_result(1, NewData[0], try,
+                            hashCount, time2 - time1, rt);
+
+ 	free_args(NewData);
+ 	NewData = NULL;
+ 	free(try);
+ 	try  = NULL;
+  }
+  return 0;
+}

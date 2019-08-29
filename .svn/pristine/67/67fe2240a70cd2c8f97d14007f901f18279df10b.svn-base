@@ -1,0 +1,406 @@
+/**
+ * Parallel Make
+ * CS 241 - Spring 2017
+ */
+
+
+#include "format.h"
+#include "graph.h"
+#include "parmake.h"
+#include "parser.h"
+#include <unistd.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <getopt.h>
+#include <sys/stat.h>
+#include <sys/types.h>
+
+// Treat this as main
+int cycledetec;
+int queueSize;
+
+void *string_destructor(void *elem) { free(elem); }
+
+void *string_default_constructor(void) { return calloc(1, sizeof(char*)); }
+
+void *string_copy_constructor(void *elem) {
+  char* temp = (char*)elem;
+  char* copy = strdup(temp);
+  return copy;
+}
+
+
+int deleteRelate(char* targetCurrent,graph* dependency_graph)				
+{
+	if( strcmp('', targetCurrent) == 0)
+		return 1;
+	vector* antineighbors = graph_antineighbors(graph *this, void *s);
+	graph_remove_vertex(dependency_graph, targetCurrent);
+	for(int i = 0; i < vector_size(antineighbors); i++)
+	{
+		char* Delete_Name = (char*)vector_get(dependencies, i);
+		int A = deleteRelate(Delete_Name,dependency_graph);
+		if(A)
+		{
+		print_cycle_failure(Delete_Name);
+		}
+	}
+	return 0;
+}
+
+int make(char* target_Name, graph* dependency_graph)
+{
+	struct stat fileStat;
+	vector* neighbors =  graph_neighbors(dependency_graph, target_Name);
+	for(int i = 0; i < vector_size(neighbors); i++)
+	{
+		char* target = (char*)vector_get(neighbors, i);
+		int result = make(target,dependency_graph);
+		if(result)
+			return 1;
+	}
+	if(access(target_Name , F_OK) == 0)
+	{
+		int doo = 0;
+		struct stat fileStat;
+		stat(target_Name,&fileStat);
+		time_t ruleTime = fileStat.st_mtime;
+		for(int i = 0; i < vector_size(neighbors); i++)
+			{
+			char* target = (char*)vector_get(neighbors, i);
+		if(access(target , F_OK) != 0)
+		{
+			doo = 1;
+			break;
+		}
+
+		struct stat fileStatT;
+		stat(target,&fileStatT);
+		time_t compareTime = fileStatT.st_mtime;
+		if(difftime(compareTime,ruleTime) >= 0)
+		{
+			doo = 1;
+			break;
+		}
+		
+		}
+		if(doo)
+		{
+			rule_t* current = 	(rule_t *)graph_get_vertex_value(dependency_graph, target_Name);
+			for(int i = 0; i < vector_size(current->commands);i++)
+			{
+			char* commands = (char*)vector_get(current->commands, i);
+			if(system(commands) == -1)
+			{
+				free(commands);
+				return 1;
+			}
+			free(commands);
+			}
+			return 0;
+		}
+		else
+			return 0;
+	}
+	else
+	{
+			rule_t* current = 	(rule_t *)graph_get_vertex_value(dependency_graph, target_Name);
+			for(int i = 0; i < vector_size(current->commands);i++)
+			{
+			char* commands = (char*)vector_get(current->commands, i);
+			if(system(commands) == -1)
+			{
+				free(commands);
+				return 1;
+			}
+			free(commands);
+			}
+			return 0;
+	}
+	return 0;
+}
+
+void doDepent(void* depen)
+{
+	dependency_graph = (graph*)depen;
+
+	vector *dependencies = graph_neighbors(dependency_graph, '');
+
+
+
+	for(int i = 0; i < vector_size(dependencies); i ++)
+	{
+		char* target_Name = (char*)vector_get(dependencies, i);
+		rule_t* current = 	(rule_t *)graph_get_vertex_value(dependency_graph, target_Name);
+		
+		make(target_Name,dependency_graph);
+	}
+	
+
+}
+
+int cycledetec(char* vertex,graph* dependency_graph)
+{
+	//0 is white 1 is grey 2 is black
+   // mark v visited
+   // set color of v to gray
+  //  for each successor v' of v {
+//	if v' not yet visited {
+//	    DFS(v')
+//	}
+  //  }
+//    set color of v to black
+	int cycle = 0;
+	rule_t* current = 	(rule_t *)graph_get_vertex_value(dependency_graph, vertex);
+	current->state = 1;
+	graph_set_vertex_value(dependency_graph, vertex,current);
+	vector* neighbors =  graph_neighbors(dependency_graph, vertex);
+	for(int i = 0; i < vector_size(neighbors);i++)
+		{
+			char* targetCurrent = (char*)vector_get(dependencies, i);
+			rule_t* currentT = 	(rule_t *)graph_get_vertex_value(dependency_graph, targetCurrent);
+			if(currentT->state == 1)
+			{
+				deleteRelate(targetCurrent,dependency_graph);				
+				return 1;
+				//cycle
+			}
+
+			if(currentT == 0)
+				cycle = cycledetec(targetCurrent,dependency_graph);
+			if(cycle == 1)
+				return 1;
+		}
+
+	current->state = 2;
+	graph_set_vertex_value(dependency_graph, vertex,current);
+	return cycle;
+}
+
+
+
+int parmake(int argc, char **argv) {
+  // good luck!
+  int option = 0;
+  
+  extern char *optarg;
+  extern int optind;
+  int err;
+  int fflag=0;
+  char* fname;
+  char* target;
+  int targetNumber = 0;
+  int jnumber = 1;
+  char** targets;
+ 
+
+	while ((option = getopt(argc, argv,"f:j:")) != -1)
+	{
+		switch(option){
+		case 'f' :
+			fflag = 1;
+			fname = optarg;
+			break;
+		case 'j':
+			jflag = 1;
+			jnumber = atoi(optarg);
+			break;
+		case '?':
+			err = 1;
+			break;
+		}
+	}
+	
+	if(optind + 1 > argc)
+	{
+		targetNumber = 0;
+		target = NULL;
+	}
+	if(fflag == 1)
+	{
+		if(access(fname, F_OK) != 0)
+			fflag = 0;
+	}
+	char* makefile = NULL;
+	if(fflag == 0)
+	{
+		if(access("makefile", F_OK) == 0)
+              makefile = "makefile";
+        else if (access("Makefile", F_OK) == 0)
+        	  makefile = "Makefile";
+        if(makefile == NULL) {
+               return 1;
+           }
+
+	}
+	else
+		makefile = fname;
+	
+
+	char* [argc - optind] Targets;
+	targetNumber = argc - optind;
+	for(;optind < argc; optind++)
+	{
+		Targets[optind] = argv[optind];
+		//vector_push_back(targets, argv[optind]);
+	}
+	
+	graph* dependency_graph;
+
+	if(targetNumber == 0)
+		dependency_graph = parser_parse_makefile(makefile, NULL);
+	else	
+		dependency_graph = parser_parse_makefile(makefile, &Targets);
+
+	//vector *target_names = graph_vertices(dependency_graph);
+
+
+	vector *dependencies = graph_neighbors(dependency_graph, '');
+	for(int i = 0; i < vector_size(dependencies); i++)
+		{
+			char* target_Name = (char*)vector_get(dependencies, i);
+			if(graph_contains_vertex(dependency_graph, target_Name))
+				cycledetec(vertex,dependency_graph);
+		}
+
+
+
+	//graph* dependency_graph = (graph*)depen;
+
+	
+
+
+
+
+	pthread_t th[1];
+
+	pthread_create(&th[0], 0, doDepent, (void*)dependency_graph);
+
+	void* result;
+
+  	pthread_join(th[0],&result);
+
+
+  return 0;
+}
+
+/*
+vector *dependencies = (vector*)depen;
+	
+	//if(check(dependencies) == 1)
+	//{
+	//	return;
+	//}
+
+
+
+	for(int i = 0; i < vector_size(dependencies);i++)
+	{
+	char* target_Name = (char*)vector_get(dependencies, i);
+	rule_t* current = 	(rule_t *)graph_get_vertex_value(dependency_graph, target_Name);
+	
+	if(current->state == 2)
+		continue;
+	current->state = 1;
+	
+	vector* neighbors =  graph_neighbors(dependency_graph, target_Name);
+//	free(target_Name);
+	if(check(neighbors) == 1)
+	{
+		for(int i = 0; i < vector_size(current->commands);i++)
+			{
+			char* commands = (char*)vector_get(current->commands, i);
+			system(commands);
+			free(commands);
+			}
+		current->state = 2;
+	}
+	else
+	{
+	doDepent((void*)neighbors);
+	if(check(neighbors) == 1)
+	{
+		for(int i = 0; i < vector_size(current->commands);i++)
+			{
+			char* commands = (char*)vector_get(current->commands, i);
+			system(commands);
+			free(commands);
+			}
+		current->state = 2;
+	}
+	else 
+		{
+		cycledetec = 1;
+		print_cycle_failure(target_Name);
+		}
+
+	}
+
+	}
+
+
+
+for(int i = 0; i < vector_size(targets);i++)
+{
+	char* target_Name = (char*)vector_get(dependencies, i);
+	rule_t* current = 	(rule_t *)graph_get_vertex_value(dependency_graph, target_Name);
+	free(target_Name);
+	if(current->state == 0)//
+	{
+		free(current);
+		return 0;
+	}
+	else if(current->state == 1)
+	{
+		//circular dependencies
+		free(current);
+		return 2;
+
+	}
+	free(current);
+}
+	return 1;
+
+
+
+
+queue* Q = queue_create(-1, string_copy_constructor, string_destructor);
+
+	void queue_push(Q, '');
+	queueSize++;
+	
+	while(queueSize != 0)
+	{
+		char* target_Name = queue_pop(Q);
+		queueSize--;
+		rule_t* current = 	(rule_t *)graph_get_vertex_value(dependency_graph, target_Name);
+		current->state = 1;
+		graph_set_vertex_value(dependency_graph, target_Name,current);
+		vector* neighbors =  graph_neighbors(dependency_graph, target_Name);
+		for(int i = 0; i < vector_size(neighbors);i++)
+		{
+			char* targetCurrent = (char*)vector_get(dependencies, i);
+			rule_t* currentT = 	(rule_t *)graph_get_vertex_value(dependency_graph, targetCurrent);
+			
+			if(currentT->state == 2)
+			{
+				deleteRelate(targetCurrent,dependency_graph);				
+				//cycle
+			}
+
+			if(currentT->state == 0)
+			{
+			queue_push(targetCurrent);
+			queueSize++;
+			}
+		}
+		current->state = 2;
+		graph_set_vertex_value(dependency_graph, target_Name,current);
+
+
+	}
+
+
+
+
+	*/

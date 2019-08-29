@@ -1,0 +1,16 @@
+/**
+ * Parallel Make
+ * CS 241 - Spring 2017
+ */
+
+
+#include "format.h"
+#include "graph.h"
+#include "parmake.h"
+#include "parser.h"
+
+// Treat this as main
+int parmake(int argc, char **argv) {
+  // good luck!
+  return 0;
+}

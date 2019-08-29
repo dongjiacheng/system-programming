@@ -1,0 +1,75 @@
+/**
+ * Machine Problem: Shell
+ * CS 241 - Fall 2016
+ */
+#include "format.h"
+#include "shell.h"
+#include "vector.h"
+#include "string.h"
+ #include <stdio.h>
+volatile sig_atomic_t pleaseStop;
+
+typedef struct process {
+  char *command;
+  char *status;
+  pid_t pid;
+} process;
+
+void handle_sigint(int signal) {
+  pleaseStop = 1;
+}
+
+void executeCommand(char* commd){
+
+}
+
+int shell(int argc, char *argv[]) {
+  // TODO: This is the entry point for your shell.
+  if(argc!=1 && argc !=3)
+  	{
+  		print_usage();
+  		return 0;
+  	}
+
+  	FILE* file_I;
+  if(argc = 3)
+  {
+  if((strcmp(argv[1],"-f") != 0))
+  	{
+  		print_usage();
+  		return 0;
+  	}//user using eror
+  //vector * Commands = char_vector_create();
+  char* file_name = argv[2];
+  file_I = fopen(file_name,"r");
+  }
+  else
+  	file_I = stdin;
+
+  if(file_I == NULL)
+  {
+  	print_script_file_error();
+  	return 0;
+  }
+    
+  char *file_buf = NULL;
+  size_t n;
+  ssize_t read = 0;
+  size_t lines = 1;
+  while ((read = getline(&file_buf, &n, file_I)) != -1)
+  	{
+    size_t len = strlen(file_buf);
+    
+    if(temp[len-1] == '\n')
+    temp[len-1] = '\0';
+	//executeCommand(file_buf);
+   // vector_push_back(Commands,file_buf)
+	printf("%s\n",file_buf);
+    lines++;
+   	}
+   
+ //  signal(SIGINT, handle_sigint);
+   
+
+  return 0;
+}

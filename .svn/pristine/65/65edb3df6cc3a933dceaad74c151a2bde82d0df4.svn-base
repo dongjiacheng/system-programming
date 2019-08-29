@@ -1,0 +1,80 @@
+/**
+ * Teaching Threads
+ * CS 241 - Spring 2017
+ */
+#include <pthread.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <unistd.h>
+
+#include "reduce.h"
+#include "reducers.h"
+
+// Task struct that gets passed into pthread_create
+typedef struct {
+  int *output;         // Pointer to where the output should be written
+  int *list;           // Pointer to the begining of the list.
+  size_t list_len;     // Length of the list.
+  reducer reduce_func; // Reduce function for reduce()
+  int base_case;       // Base case for the reduce function
+} task;
+
+/* You should create a start routine for your threads. */
+
+
+void *busy(void *ptr) {
+	task *currentTask = (task*) ptr;
+	currentTask->output = malloc(sizeof(int));
+	for(size_t i = 0; i < currentTask->list_len; i ++)
+	{
+	printf("ListHas%d\n",currentTask->list[i]);
+	fflush(stdout);
+	}	
+	*currentTask->output = reduce(currentTask->list,currentTask->list_len, currentTask->reduce_func, currentTask->base_case);
+
+	return NULL;
+}
+
+int par_reduce(int *list, size_t list_len, reducer reduce_func, int base_case,
+               size_t num_threads) {
+  pthread_t th[num_threads];
+  void *result;
+
+  task **info = calloc(num_threads , sizeof(task*));
+
+
+  int remain = list_len%num_threads;
+
+  int howMany = list_len/num_threads;
+
+
+  /* Your implementation goes here */
+  for(size_t i = 0; i < num_threads; i++)
+  {
+  info[i] = malloc(sizeof(task)) ;
+  info[i]->list = (list+i*howMany);
+  if(i == (num_threads-1))
+  	info[i]->list_len = remain + howMany;
+  else	
+  	info[i]->list_len = howMany;
+  info[i]->base_case = base_case;
+  info[i]->reduce_func = reduce_func;
+  pthread_create(&th[i], 0, busy, (void*)info[i]);
+  
+  }
+  int *LList = malloc(num_threads*sizeof(int));
+  for(size_t i = 0; i < num_threads; i++)
+  {
+  pthread_join(th[i],&result);
+  LList[i] = *(info[i]->output);
+  free(info[i]->output);
+  free(info[i]);
+  }
+  
+  int tI = reduce(LList,num_threads,reduce_func,base_case);
+
+  free (info);
+  free (LList);
+  return tI;
+}

@@ -1,0 +1,43 @@
+/**
+ * Splendid Synchronization Lab 
+ * CS 241 - Spring 2017
+ */
+#include <assert.h>
+#include <pthread.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h>
+
+#include "queue.h"
+queue* Q;
+int data[100];
+
+void *calc(void *ptr) {
+
+	int* data = (int*)ptr;
+	for(int i = 0; i < 10; i++)
+		queue_push(Q,data[i]);
+}
+
+int main(int argc, char **argv) {
+	Q = int_queue_create();
+	for(int i = 0; i< 100; i++)
+		data[i] = i;
+    pthread_t ids[10];
+    for(int i = 0; i < argv[1]; i++)  
+        pthread_create(&ids[i], NULL, calc, (void *) data+i*10);
+
+    void* result;
+    for(int i = 0; i < 100; i ++)
+    	pthread_join(ids[i],&result);
+
+    for(int i = 0; i < 100; i ++)
+    {
+    	int* t = queue_pull(Q);
+    	printf("%d\n", *t);
+    }
+
+    queue_destroy(Q);
+  printf("Please write tests cases\n");
+  return 0;
+}

@@ -1,0 +1,9 @@
+all: a b c
+	echo "This should not display, since its dependency failed"
+a: b c
+	echo "This should not display, since its dependency failed"
+c:
+	echo "this should show"
+b:
+	echo "This rule is going to fail, since 'asdf' does not exist"
+	cat asdf

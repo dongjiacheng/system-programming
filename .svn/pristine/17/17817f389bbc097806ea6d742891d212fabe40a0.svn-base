@@ -1,0 +1,269 @@
+/**
+ * Splendid Synchronization Lab 
+ * CS 241 - Spring 2017
+ */
+#include <assert.h>
+#include <pthread.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h>
+#include <string.h>
+
+#include "queue.h"
+
+#define THREAD_COUNT 4
+/*
+int main(int argc, char **argv){
+    return 0; 
+}
+*/
+queue *q;
+
+void* pushFn(void *data) {
+  //printf("Pushing data: %d...\n", *((int*)data) )  ;
+  queue_push(q, data);
+
+  return NULL;
+}
+
+void* pullFn(void *data) {
+  //printf("Pulling queue...\n");
+
+  return (void*)queue_pull(q);;
+}
+
+// Normal test
+void test1(){
+
+  int i;
+  pthread_t push_ids[THREAD_COUNT];
+  pthread_t pull_ids[THREAD_COUNT];
+  int short_ids[THREAD_COUNT];
+
+  srand(time(NULL));
+  ssize_t max_size = 10;
+  q = int_queue_create();
+  q->max_size = max_size;
+
+  int push_count = THREAD_COUNT;
+
+  for (i=0; i < push_count; i++) {
+    short_ids[i] = i;
+    pthread_create(&push_ids[i], NULL, pushFn, &short_ids[i]);
+  }
+
+  for (i=0; i < THREAD_COUNT; i++) {
+    short_ids[i] = i;
+    pthread_create(&pull_ids[i], NULL, pullFn, &short_ids[i]);
+  }
+
+  // Wait for push thread 
+  for (i=0; i < THREAD_COUNT; i++) {
+    pthread_join(push_ids[i], NULL);
+  }
+
+  int *ret;
+  for (i=0; i < THREAD_COUNT; i++) {
+    pthread_join(pull_ids[i], (void **)(&ret));
+    printf("Pull and get: %d\n", *ret);
+  }
+
+  queue_destroy(q);
+}
+
+//Test case: Push more than the max_val
+void test2(){
+  int i;
+  int push_count = 13;
+  int pull_count = 5;
+
+  pthread_t push_ids[push_count];
+  pthread_t pull_ids[pull_count];
+  int short_ids[100];
+
+  srand(time(NULL));
+  ssize_t max_size = 10;
+  q = int_queue_create();
+  q->max_size = max_size;
+
+  for (i=0; i < push_count; i++) {
+    short_ids[i] = i;
+    pthread_create(&push_ids[i], NULL, pushFn, &short_ids[i]);
+  }
+
+  for (i=0; i < pull_count; i++) {
+    short_ids[i] = i;
+    pthread_create(&pull_ids[i], NULL, pullFn, &short_ids[i]);
+  }
+
+  // Wait for push thread 
+  for (i=0; i < push_count; i++) {
+    pthread_join(push_ids[i], NULL);
+  }
+
+  int *ret;
+  for (i=0; i < pull_count; i++) {
+    pthread_join(pull_ids[i], (void **)(&ret));
+    printf("Pull and get: %d\n", *ret);
+  }
+
+  queue_destroy(q);
+}
+
+//Test case: max_val is unlimited!
+void test3(){
+  int i;
+  int push_count = 21;
+  int pull_count = 9;
+
+  pthread_t push_ids[push_count];
+  pthread_t pull_ids[pull_count];
+  int short_ids[100];
+
+  srand(time(NULL));
+  ssize_t max_size = 0;
+  q = int_queue_create();
+  q->max_size = max_size;
+
+  for (i=0; i < push_count; i++) {
+    short_ids[i] = i;
+    pthread_create(&push_ids[i], NULL, pushFn, &short_ids[i]);
+  }
+
+  for (i=0; i < pull_count; i++) {
+    short_ids[i] = i;
+    pthread_create(&pull_ids[i], NULL, pullFn, &short_ids[i]);
+  }
+
+  // Wait for push thread 
+  for (i=0; i < push_count; i++) {
+    pthread_join(push_ids[i], NULL);
+  }
+
+  int *ret;
+  for (i=0; i < pull_count; i++) {
+    pthread_join(pull_ids[i], (void **)(&ret));
+    printf("Pull and get: %d\n", *ret);
+  }
+
+  queue_destroy(q);
+}
+
+//Test case: Pull more than the queue contains
+void test4(){
+  int i;
+  int push_count = 8;
+  int pull_count = 12;
+
+  pthread_t push_ids[push_count];
+  pthread_t pull_ids[pull_count];
+  int short_ids[100];
+  
+  srand(time(NULL));
+  ssize_t max_size = 10;
+  q = int_queue_create();
+  q->max_size = max_size;
+  
+  // First, attempt to pull
+  for (i=0; i < pull_count; i++) {
+    short_ids[i] = i;
+    pthread_create(&pull_ids[i], NULL, pullFn, &short_ids[i]);
+  } 
+  
+  // Push some element into it
+  for (i=0; i < push_count; i++) {
+    short_ids[i] = i;
+    pthread_create(&push_ids[i], NULL, pushFn, &short_ids[i]);
+  } 
+  
+  // Wait for push thread 
+  for (i=0; i < push_count; i++) {
+    pthread_join(push_ids[i], NULL);
+  } 
+  
+  sleep(10);
+  int new_push_count = 4;
+  // Push some element into it
+  for (i=0; i < new_push_count; i++) {
+    short_ids[i] = i + push_count;
+    pthread_create(&push_ids[i], NULL, pushFn, &short_ids[i]);
+  }
+
+  // Wait for push thread 
+  for (i=0; i < new_push_count; i++) {
+    pthread_join(push_ids[i], NULL);
+  }
+
+  int *ret;
+  for (i=0; i < pull_count; i++) {
+    pthread_join(pull_ids[i], (void **)(&ret));
+    printf("Pull and get: %d\n", *ret);
+  }
+
+  queue_destroy(q);
+ }
+
+ // Memory Test
+void test5(){
+  int i;
+  int push_count = 1;
+  int pull_count = 1;
+
+  pthread_t push_ids[push_count];
+  pthread_t pull_ids[pull_count];
+  int short_ids[100];
+
+  ssize_t max_size = 10;
+  q = int_queue_create();
+  q->max_size = max_size;
+
+  // First, attempt to pull
+  for (i=0; i < pull_count; i++) {
+    short_ids[i] = i;
+    pthread_create(&pull_ids[i], NULL, pullFn, &short_ids[i]);
+  }
+
+  // Push some element into it
+  for (i=0; i < push_count; i++) {
+    short_ids[i] = i;
+    pthread_create(&push_ids[i], NULL, pushFn, &short_ids[i]);
+  }
+
+  // Wait for push thread 
+  for (i=0; i < push_count; i++) {
+    pthread_join(push_ids[i], NULL);
+  }
+
+  int *ret;
+  for (i=0; i < pull_count; i++) {
+    pthread_join(pull_ids[i], (void **)(&ret));
+    printf("Pull and get: %d\n", *ret);
+  }
+
+  queue_destroy(q);
+}
+
+int main(int argc, char **argv) {
+
+    if(argc == 1){
+        printf("Please input ./queue_test <test number>\n");
+        return 0;
+    }
+    if(strcmp(argv[1], "1") == 0){
+        test1();
+    }
+    if(strcmp(argv[1], "2") == 0){
+        test2();
+    }
+    if(strcmp(argv[1], "3") == 0){
+        test3();
+    }
+    if(strcmp(argv[1], "4") == 0){
+        test4();
+    }
+    if(strcmp(argv[1], "5") == 0){
+        test5();
+    }
+
+    return 0;
+}

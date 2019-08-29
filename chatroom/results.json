@@ -1,0 +1,317 @@
+[
+  {
+    "checksum": "1b429acdbdf1162ed5c94f8f2cc283f12c278120  client.c\n82846bb4b616bde255cb281cd4e5b766f775d58d  server.c\na09878a50b143eeadd37a9251ddd54626ddb4e80  utils.c\n",
+    "timestamp": "2017-04-09 23:00:00.675166",
+    "revision": "74081",
+    "testcases": [
+      {
+        "ptsPossible": 1.0,
+        "name": "Client Wrong Port",
+        "log": "Trying to compile your code...\nSuccessfully compiled your code..\nTrying to compile your code...\nSuccessfully compiled your code..\nClient connected to non existent port",
+        "description": "Testing that client can't connect to a port that is not the server's port",
+        "ptsEarned": 0.0
+      },
+      {
+        "ptsPossible": 4.0,
+        "name": "Everything Works",
+        "log": "Trying to compile your code...\nSuccessfully compiled your code..\nTrying to compile your code...\nSuccessfully compiled your code..\nMissing output from at least one of the clients.",
+        "description": "Testing 8 student clients with student server with read and write fails",
+        "ptsEarned": 0.0
+      },
+      {
+        "ptsPossible": 1.0,
+        "name": "Memory",
+        "log": "Trying to compile your code...\nSuccessfully compiled your code..\nTrying to compile your code...\nSuccessfully compiled your code..\nNone\n==27528== Memcheck, a memory error detector\n==27528== Copyright (C) 2002-2015, and GNU GPL'd, by Julian Seward et al.\n==27528== Using Valgrind-3.11.0 and LibVEX; rerun with -h for copyright info\n==27528== Command: ./socket_hook ./server 49623\n==27528== \n",
+        "description": "Testing student's server and client combo for memory errors and leaks",
+        "ptsEarned": 1.0
+      },
+      {
+        "ptsPossible": 2.0,
+        "name": "Read Failures",
+        "log": "Trying to compile your code...\nSuccessfully compiled your code..\nTrying to compile your code...\nSuccessfully compiled your code..\nClient didn't receive entire message from student server.",
+        "description": "Testing student's client and server with read failures.",
+        "ptsEarned": 0.0
+      },
+      {
+        "ptsPossible": 1.0,
+        "name": "Server: Below Port 1024",
+        "log": "Trying to compile your code...\nSuccessfully compiled your code..\nTrying to compile your code...\nSuccessfully compiled your code..\nServer did not error out",
+        "description": "Testing student's server can't connect to port below 1024",
+        "ptsEarned": 0.0
+      },
+      {
+        "ptsPossible": 2.0,
+        "name": "Student Client | AG Server",
+        "log": "Trying to compile your code...\nSuccessfully compiled your code..\nTrying to compile your code...\nSuccessfully compiled your code..\nAutograder server didn't receive message from student client.",
+        "description": "Testing student's client with autograder's server without read/write failures.",
+        "ptsEarned": 0.0
+      },
+      {
+        "ptsPossible": 2.0,
+        "name": "Student Server | AG Client",
+        "log": "Trying to compile your code...\nSuccessfully compiled your code..\nTrying to compile your code...\nSuccessfully compiled your code..\nUnable to write to client stdin\nClient didn't receive message from student server.",
+        "description": "Testing student's server with autograder's client without read/write failures.",
+        "ptsEarned": 0.0
+      },
+      {
+        "ptsPossible": 2.0,
+        "name": "Write Failures",
+        "log": "Trying to compile your code...\nSuccessfully compiled your code..\nTrying to compile your code...\nSuccessfully compiled your code..\nClient didn't receive entire message from server.",
+        "description": "Testing student's client and server with write failures.",
+        "ptsEarned": 0.0
+      }
+    ]
+  },
+  {
+    "checksum": "1b429acdbdf1162ed5c94f8f2cc283f12c278120  client.c\n82846bb4b616bde255cb281cd4e5b766f775d58d  server.c\na09878a50b143eeadd37a9251ddd54626ddb4e80  utils.c\n",
+    "revision": "74865",
+    "timestamp": "2017-04-10 22:00:01.359618",
+    "testcases": [
+      {
+        "log": "Trying to compile your code...\nSuccessfully compiled your code..\nTrying to compile your code...\nSuccessfully compiled your code..\nClient connected to non existent port",
+        "description": "Testing that client can't connect to a port that is not the server's port",
+        "name": "Client Wrong Port",
+        "ptsEarned": 0.0,
+        "ptsPossible": 1.0
+      },
+      {
+        "log": "Trying to compile your code...\nSuccessfully compiled your code..\nTrying to compile your code...\nSuccessfully compiled your code..\nMissing output from at least one of the clients.",
+        "description": "Testing 8 student clients with student server with read and write fails",
+        "name": "Everything Works",
+        "ptsEarned": 0.0,
+        "ptsPossible": 4.0
+      },
+      {
+        "log": "Trying to compile your code...\nSuccessfully compiled your code..\nTrying to compile your code...\nSuccessfully compiled your code..\nNone\n==20530== Memcheck, a memory error detector\n==20530== Copyright (C) 2002-2015, and GNU GPL'd, by Julian Seward et al.\n==20530== Using Valgrind-3.11.0 and LibVEX; rerun with -h for copyright info\n==20530== Command: ./socket_hook ./server 49623\n==20530== \n",
+        "description": "Testing student's server and client combo for memory errors and leaks",
+        "name": "Memory",
+        "ptsEarned": 1.0,
+        "ptsPossible": 1.0
+      },
+      {
+        "log": "Trying to compile your code...\nSuccessfully compiled your code..\nTrying to compile your code...\nSuccessfully compiled your code..\nClient didn't receive entire message from student server.",
+        "description": "Testing student's client and server with read failures.",
+        "name": "Read Failures",
+        "ptsEarned": 0.0,
+        "ptsPossible": 2.0
+      },
+      {
+        "log": "Trying to compile your code...\nSuccessfully compiled your code..\nTrying to compile your code...\nSuccessfully compiled your code..\nServer did not error out",
+        "description": "Testing student's server can't connect to port below 1024",
+        "name": "Server: Below Port 1024",
+        "ptsEarned": 0.0,
+        "ptsPossible": 1.0
+      },
+      {
+        "log": "Trying to compile your code...\nSuccessfully compiled your code..\nTrying to compile your code...\nSuccessfully compiled your code..\nAutograder server didn't receive message from student client.",
+        "description": "Testing student's client with autograder's server without read/write failures.",
+        "name": "Student Client | AG Server",
+        "ptsEarned": 0.0,
+        "ptsPossible": 2.0
+      },
+      {
+        "log": "Trying to compile your code...\nSuccessfully compiled your code..\nTrying to compile your code...\nSuccessfully compiled your code..\nUnable to write to client stdin\nClient didn't receive message from student server.",
+        "description": "Testing student's server with autograder's client without read/write failures.",
+        "name": "Student Server | AG Client",
+        "ptsEarned": 0.0,
+        "ptsPossible": 2.0
+      },
+      {
+        "log": "Trying to compile your code...\nSuccessfully compiled your code..\nTrying to compile your code...\nSuccessfully compiled your code..\nClient didn't receive entire message from server.",
+        "description": "Testing student's client and server with write failures.",
+        "name": "Write Failures",
+        "ptsEarned": 0.0,
+        "ptsPossible": 2.0
+      }
+    ]
+  },
+  {
+    "checksum": "1b536ff00a6b9293d162f49f04b94eb2fc086b6c  client.c\nb58c35f26462f48452153413ac84933a8718809d  server.c\n827f95165a44e249d4c7951cbd9091d438cfe386  utils.c\n",
+    "timestamp": "2017-04-11 22:00:01.476143",
+    "revision": "75707",
+    "testcases": [
+      {
+        "ptsPossible": 1.0,
+        "name": "Client Wrong Port",
+        "log": "Trying to compile your code...\nSuccessfully compiled your code..\nTrying to compile your code...\nSuccessfully compiled your code..\nClient connected to non existent port",
+        "description": "Testing that client can't connect to a port that is not the server's port",
+        "ptsEarned": 0.0
+      },
+      {
+        "ptsPossible": 4.0,
+        "name": "Everything Works",
+        "log": "Trying to compile your code...\nSuccessfully compiled your code..\nTrying to compile your code...\nSuccessfully compiled your code..\nMissing output from at least one of the clients.",
+        "description": "Testing 8 student clients with student server with read and write fails",
+        "ptsEarned": 0.0
+      },
+      {
+        "ptsPossible": 1.0,
+        "name": "Memory",
+        "log": "Trying to compile your code...\nSuccessfully compiled your code..\nTrying to compile your code...\nSuccessfully compiled your code..\nNone\n==16604== Memcheck, a memory error detector\n==16604== Copyright (C) 2002-2015, and GNU GPL'd, by Julian Seward et al.\n==16604== Using Valgrind-3.11.0 and LibVEX; rerun with -h for copyright info\n==16604== Command: ./socket_hook ./server 49623\n==16604== \n",
+        "description": "Testing student's server and client combo for memory errors and leaks",
+        "ptsEarned": 1.0
+      },
+      {
+        "ptsPossible": 2.0,
+        "name": "Read Failures",
+        "log": "Trying to compile your code...\nSuccessfully compiled your code..\nTrying to compile your code...\nSuccessfully compiled your code..\nClient didn't receive entire message from student server.",
+        "description": "Testing student's client and server with read failures.",
+        "ptsEarned": 0.0
+      },
+      {
+        "ptsPossible": 1.0,
+        "name": "Server: Below Port 1024",
+        "log": "Trying to compile your code...\nSuccessfully compiled your code..\nTrying to compile your code...\nSuccessfully compiled your code..",
+        "description": "Testing student's server can't connect to port below 1024",
+        "ptsEarned": 1.0
+      },
+      {
+        "ptsPossible": 2.0,
+        "name": "Student Client | AG Server",
+        "log": "Trying to compile your code...\nSuccessfully compiled your code..\nTrying to compile your code...\nSuccessfully compiled your code..\nAutograder server didn't receive message from student client.",
+        "description": "Testing student's client with autograder's server without read/write failures.",
+        "ptsEarned": 0.0
+      },
+      {
+        "ptsPossible": 2.0,
+        "name": "Student Server | AG Client",
+        "log": "Trying to compile your code...\nSuccessfully compiled your code..\nTrying to compile your code...\nSuccessfully compiled your code..\nClient didn't receive message from student server.",
+        "description": "Testing student's server with autograder's client without read/write failures.",
+        "ptsEarned": 0.0
+      },
+      {
+        "ptsPossible": 2.0,
+        "name": "Write Failures",
+        "log": "Trying to compile your code...\nSuccessfully compiled your code..\nTrying to compile your code...\nSuccessfully compiled your code..\nClient didn't receive entire message from server.",
+        "description": "Testing student's client and server with write failures.",
+        "ptsEarned": 0.0
+      }
+    ]
+  },
+  {
+    "checksum": "1b536ff00a6b9293d162f49f04b94eb2fc086b6c  client.c\nb58c35f26462f48452153413ac84933a8718809d  server.c\na2fe0330df63b2b2354c270da4fecbefab33767b  utils.c\n",
+    "revision": "76156",
+    "timestamp": "2017-04-12 14:00:01.580437",
+    "testcases": [
+      {
+        "description": "Testing that client can't connect to a port that is not the server's port",
+        "name": "Client Wrong Port",
+        "log": "Trying to compile your code...\nSuccessfully compiled your code..\nTrying to compile your code...\nSuccessfully compiled your code..\nClient connected to non existent port",
+        "ptsPossible": 1.0,
+        "ptsEarned": 0.0
+      },
+      {
+        "description": "Testing 8 student clients with student server with read and write fails",
+        "name": "Everything Works",
+        "log": "Trying to compile your code...\nSuccessfully compiled your code..\nTrying to compile your code...\nSuccessfully compiled your code..\nMissing output from at least one of the clients.",
+        "ptsPossible": 4.0,
+        "ptsEarned": 0.0
+      },
+      {
+        "description": "Testing student's server and client combo for memory errors and leaks",
+        "name": "Memory",
+        "log": "Trying to compile your code...\nSuccessfully compiled your code..\nTrying to compile your code...\nSuccessfully compiled your code..\nNone\n==27483== Memcheck, a memory error detector\n==27483== Copyright (C) 2002-2015, and GNU GPL'd, by Julian Seward et al.\n==27483== Using Valgrind-3.11.0 and LibVEX; rerun with -h for copyright info\n==27483== Command: ./socket_hook ./server 49623\n==27483== \n",
+        "ptsPossible": 1.0,
+        "ptsEarned": 1.0
+      },
+      {
+        "description": "Testing student's client and server with read failures.",
+        "name": "Read Failures",
+        "log": "Trying to compile your code...\nSuccessfully compiled your code..\nTrying to compile your code...\nSuccessfully compiled your code..\nClient didn't receive entire message from student server.",
+        "ptsPossible": 2.0,
+        "ptsEarned": 0.0
+      },
+      {
+        "description": "Testing student's server can't connect to port below 1024",
+        "name": "Server: Below Port 1024",
+        "log": "Trying to compile your code...\nSuccessfully compiled your code..\nTrying to compile your code...\nSuccessfully compiled your code..",
+        "ptsPossible": 1.0,
+        "ptsEarned": 1.0
+      },
+      {
+        "description": "Testing student's client with autograder's server without read/write failures.",
+        "name": "Student Client | AG Server",
+        "log": "Trying to compile your code...\nSuccessfully compiled your code..\nTrying to compile your code...\nSuccessfully compiled your code..\nAutograder server didn't receive message from student client.",
+        "ptsPossible": 2.0,
+        "ptsEarned": 0.0
+      },
+      {
+        "description": "Testing student's server with autograder's client without read/write failures.",
+        "name": "Student Server | AG Client",
+        "log": "Trying to compile your code...\nSuccessfully compiled your code..\nTrying to compile your code...\nSuccessfully compiled your code..\nClient didn't receive message from student server.",
+        "ptsPossible": 2.0,
+        "ptsEarned": 0.0
+      },
+      {
+        "description": "Testing student's client and server with write failures.",
+        "name": "Write Failures",
+        "log": "Trying to compile your code...\nSuccessfully compiled your code..\nTrying to compile your code...\nSuccessfully compiled your code..\nClient didn't receive entire message from server.",
+        "ptsPossible": 2.0,
+        "ptsEarned": 0.0
+      }
+    ]
+  },
+  {
+    "checksum": "261bfdec4ba2ebb996ceb0788964bbb6806f59a8  client.c\n5c6960ab766f15b09fc9c1c7586379d93cb75a2e  server.c\n77f2247c8859ef6c62c3e6a602a1d425a1bffe4a  utils.c\n",
+    "timestamp": "2017-04-13 00:00:00.846416",
+    "revision": "76954",
+    "testcases": [
+      {
+        "description": "Testing that client can't connect to a port that is not the server's port",
+        "name": "Client Wrong Port",
+        "log": "Trying to compile your code...\nSuccessfully compiled your code..\nTrying to compile your code...\nSuccessfully compiled your code..",
+        "ptsPossible": 1.0,
+        "ptsEarned": 1.0
+      },
+      {
+        "description": "Testing 8 student clients with student server with read and write fails",
+        "name": "Everything Works",
+        "log": "Trying to compile your code...\nSuccessfully compiled your code..\nTrying to compile your code...\nSuccessfully compiled your code..",
+        "ptsPossible": 4.0,
+        "ptsEarned": 4.0
+      },
+      {
+        "description": "Testing student's server and client combo for memory errors and leaks",
+        "name": "Memory",
+        "log": "Trying to compile your code...\nSuccessfully compiled your code..\nTrying to compile your code...\nSuccessfully compiled your code..\nNone\n==30515== Memcheck, a memory error detector\n==30515== Copyright (C) 2002-2015, and GNU GPL'd, by Julian Seward et al.\n==30515== Using Valgrind-3.11.0 and LibVEX; rerun with -h for copyright info\n==30515== Command:  ./server 49623\n==30515== \n",
+        "ptsPossible": 1.0,
+        "ptsEarned": 1.0
+      },
+      {
+        "description": "Testing student's client and server with read failures.",
+        "name": "Read Failures",
+        "log": "Trying to compile your code...\nSuccessfully compiled your code..\nTrying to compile your code...\nSuccessfully compiled your code..",
+        "ptsPossible": 2.0,
+        "ptsEarned": 2.0
+      },
+      {
+        "description": "Testing student's server can't connect to port below 1024",
+        "name": "Server: Below Port 1024",
+        "log": "Trying to compile your code...\nSuccessfully compiled your code..\nTrying to compile your code...\nSuccessfully compiled your code..",
+        "ptsPossible": 1.0,
+        "ptsEarned": 1.0
+      },
+      {
+        "description": "Testing student's client with autograder's server without read/write failures.",
+        "name": "Student Client | AG Server",
+        "log": "Trying to compile your code...\nSuccessfully compiled your code..\nTrying to compile your code...\nSuccessfully compiled your code..",
+        "ptsPossible": 2.0,
+        "ptsEarned": 2.0
+      },
+      {
+        "description": "Testing student's server with autograder's client without read/write failures.",
+        "name": "Student Server | AG Client",
+        "log": "Trying to compile your code...\nSuccessfully compiled your code..\nTrying to compile your code...\nSuccessfully compiled your code..",
+        "ptsPossible": 2.0,
+        "ptsEarned": 2.0
+      },
+      {
+        "description": "Testing student's client and server with write failures.",
+        "name": "Write Failures",
+        "log": "Trying to compile your code...\nSuccessfully compiled your code..\nTrying to compile your code...\nSuccessfully compiled your code..",
+        "ptsPossible": 2.0,
+        "ptsEarned": 2.0
+      }
+    ]
+  }
+]

@@ -1,0 +1,43 @@
+/**
+ * Splendid Synchronization Lab 
+ * CS 241 - Spring 2017
+ */
+#include "barrier.h"
+
+// The returns are just for errors if you want to check for them.
+int barrier_destroy(barrier_t *barrier) {
+  int error = 0;
+
+  pthread_mutex_destroy(&barrier->m);
+	pthread_cond_destroy(&barrier->cv);
+
+  return error;
+}
+
+int barrier_init(barrier_t *barrier, unsigned int num_threads) {
+  
+  barrier->n_threads = num_threads;
+  barrier->count = 0;
+  barrier->times_used = 0;
+  pthread_mutex_init(&s->m, NULL);
+  pthread_cond_init(&s->cv, NULL);
+
+  return 0;
+}
+
+int barrier_wait(barrier_t *barrier) { 
+	pthread_mutex_lock(&m);
+	barrier->count++;
+	if (barrier->count == num_threads) {
+		barrier->count = barrier->num_threads; 
+		barrier->times_used++;
+		pthread_cond_broadcast(&cv); 
+		}
+	else {
+ 	 while(barrier->count != barrier->num_threads) { 
+ 	 	pthread_cond_wait(&cv, &m); 
+ 	 }
+ 	}
+	pthread_mutex_unlock(&m);
+	return 0; 
+}
